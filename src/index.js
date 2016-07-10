@@ -1,3 +1,54 @@
+
+var express = require('express');
+var request = require('request');
+
+var app = express();
+
+var GA_TRACKING_ID = 'UA-80568005-1';
+
+function trackEvent(category, action, label, value, cb) {
+  var data = {
+    v: '1', // API Version.
+    tid: GA_TRACKING_ID, // Tracking ID / Property ID.
+    // Anonymous Client Identifier. Ideally, this should be a UUID that
+    // is associated with particular user, device, or browser instance.
+    cid: '555',
+    t: 'event', // Event hit type.
+    ec: category, // Event category.
+    ea: action, // Event action.
+    el: label, // Event label.
+    ev: value, // Event value.
+  };
+
+  request.post(
+    'http://www.google-analytics.com/collect', {
+      form: data
+    },
+    function(err, response) {
+      if (err) { return cb(err); }
+      if (response.statusCode !== 200) {
+        return cb(new Error('Tracking failed'));
+      }
+      cb();
+    }
+  );
+}
+
+"AMAZON.NoIntent": function (intent, session, response) {
+    trackEvent(
+      'Intent',
+      'AMAZON.NoIntent',
+      'na',
+      '100', // Event value must be numeric.
+      function(err) {
+        if (err) {
+            return next(err);
+        }
+        var speechOutput = "Okay.";
+        response.tell(speechOutput);
+      });
+}
+
 var http       = require('http')
   , AlexaSkill = require('./AlexaSkill')
   , APP_ID     = 'amzn1.echo-sdk-ams.app.260bfab1-5fc4-42b7-b706-e220d826ced5'
