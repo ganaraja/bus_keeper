@@ -1,9 +1,7 @@
-require('dotenv').load();
-
 var http       = require('http')
   , AlexaSkill = require('./AlexaSkill')
-  , APP_ID     = process.env.APP_ID
-  , MTA_KEY    = process.env.MTA_KEY;
+  , APP_ID     = 'amzn1.echo-sdk-ams.app.260bfab1-5fc4-42b7-b706-e220d826ced5'
+  , MTA_KEY    = '6ceac258-6183-478b-9fb4-33ed37ff32f7';
 
 var url = function(stopId){
   return 'http://bustime.mta.info/api/siri/stop-monitoring.json?key=' + MTA_KEY + '&OperatorRef=MTA&MaximumStopVisits=1&MonitoringRef=' + stopId;
